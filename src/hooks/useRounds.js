@@ -1,17 +1,17 @@
-import { useAccount, usePublicClient } from "wagmi"
+import { usePublicClient, useChains } from "wagmi"
 import { getContract } from "viem";
 
 import raffleAbi from "@/config/abi/raffle";
 
 const useRounds = () => {
-    const { chain } = useAccount();
+    const chains = useChains();
 
     const publicClient = usePublicClient({
-        chainId: chain?.id,
+        chainId: chains[0].id,
     });
 
     const raffleContract = getContract({
-        address: chain?.contracts?.raffle?.address,
+        address: chains[0]?.contracts?.raffle?.address,
         abi: raffleAbi,
         client: {
             public: publicClient,
@@ -30,7 +30,7 @@ const useRounds = () => {
                 fomo
             }
         } catch (e) {
-            console.log("buyQuickplayTicket error: ", e)
+            console.log("getRoundsEpoch error: ", e)
         }
     }
 
