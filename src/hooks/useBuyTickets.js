@@ -75,11 +75,20 @@ const useBuyTickets = () => {
 
     const buyFomoTickets = async(count) => {
         try {
-            const buyTx = await raffleContract.write.buyFOMOTickets({
+            const gasLimit = await raffleContract.estimateGas.buyFOMOTickets({
                 args: [
                     count
                 ],
                 value: parseEther((count * 0.055).toString())
+            });
+
+            const buyTx = await raffleContract.write.buyFOMOTickets({
+                args: [
+                    count
+                ],
+                value: parseEther((count * 0.055).toString()),
+                gas: gasLimit,
+                gasPrice: feeData.gasPrice
             })
 
             let butReceipt = await publicClient.waitForTransactionReceipt({
